@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightning Strikes — ThndrStrm Strategies</title>
+  <meta name="description" content="Strategy is easy to talk about. Here's what it looks like when it actually works. A decade of being in the room where it happened.">
+  <link rel="icon" type="image/png" href="logo-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #080f1d;
+      --navy-mid: #0d1f38;
+      --navy-light: #142844;
+      --steel: #4a7eb5;
+      --steel-light: #6fa3d4;
+      --steel-pale: #a8c8e8;
+      --white: #f0f4f8;
+      --white-dim: rgba(240,244,248,0.7);
+      --white-faint: rgba(240,244,248,0.15);
+      --accent-line: rgba(74,126,181,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(8,15,29,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 48px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--steel-light); }
+    .nav-links a.active { color: var(--steel-light); }
+
+    .nav-cta {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--navy) !important;
+      background: var(--steel-light);
+      padding: 0.55rem 1.25rem;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--steel-pale) !important; color: var(--navy) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      padding: 10rem 3rem 6rem;
+      overflow: hidden;
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 90% at 75% 50%, rgba(74,126,181,0.11) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 15% 80%, rgba(74,126,181,0.05) 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+    }
+
+    .section-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--steel-light);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 1.5rem;
+      height: 1px;
+      background: var(--steel-light);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--steel-light);
+    }
+
+    .hero-right {
+      padding-bottom: 0.25rem;
+    }
+
+    .hero-right p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      line-height: 1.75;
+    }
+
+    /* ── INTRO ── */
+    .intro-section {
+      position: relative;
+      z-index: 1;
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    .intro-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 3rem;
+    }
+
+    .intro-inner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: 1.25rem;
+      max-width: 700px;
+    }
+
+    .intro-inner h2 em {
+      font-style: normal;
+      color: var(--steel-light);
+    }
+
+    .intro-inner p {
+      font-size: 1rem;
+      color: var(--white-dim);
+      line-height: 1.8;
+      max-width: 680px;
+      margin-bottom: 0.9rem;
+    }
+
+    .intro-inner p:last-child { margin-bottom: 0; }
+
+    /* ── ENTRIES ── */
+    .entries-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .entries-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    /* Individual entry */
+    .entry {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--accent-line);
+      padding: 5rem 0;
+    }
+
+    .entry:first-child { padding-top: 5rem; }
+
+    /* Left: number + org label */
+    .entry-meta {
+      padding-right: 3rem;
+      padding-top: 0.2rem;
+    }
+
+    .entry-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      line-height: 1;
+      color: rgba(74,126,181,0.15);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .entry-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--steel);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .entry-tag::before {
+      content: '';
+      display: block;
+      width: 1rem;
+      height: 1px;
+      background: var(--steel);
+    }
+
+    /* Right: content */
+    .entry-content {}
+
+    .entry-logo {
+      display: block;
+      height: 52px;
+      width: auto;
+      max-width: 260px;
+      object-fit: contain;
+      object-position: left center;
+      margin-bottom: 1.25rem;
+      opacity: 0.92;
+    }
+
+    /* NCIA badge is square — give it more height */
+    .entry-logo.logo-badge {
+      height: 72px;
+    }
+
+    .entry-org {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.4rem;
+    }
+
+    .entry-headline {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--steel-pale);
+      margin-bottom: 1.75rem;
+      letter-spacing: 0.01em;
+    }
+
+    .entry-body {
+      margin-bottom: 1.75rem;
+    }
+
+    .entry-body p {
+      font-size: 1rem;
+      color: var(--white-dim);
+      line-height: 1.8;
+      margin-bottom: 0.9rem;
+    }
+
+    .entry-body p:last-child { margin-bottom: 0; }
+
+    /* Stats bar */
+    .entry-stats {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.75rem;
+      border: 1px solid var(--accent-line);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--accent-line);
+      background: rgba(74,126,181,0.05);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--steel-light);
+      letter-spacing: 0.02em;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+    }
+
+    /* "What this demonstrated" block */
+    .entry-demonstrated {
+      border-left: 2px solid var(--steel);
+      padding: 1rem 1.5rem;
+      background: rgba(74,126,181,0.06);
+      margin-bottom: 1.75rem;
+    }
+
+    .entry-demonstrated .demo-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 0.5rem;
+    }
+
+    .entry-demonstrated p {
+      font-size: 0.95rem;
+      color: var(--white-dim);
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* Testimonial */
+    .entry-quote {
+      margin-top: 0;
+    }
+
+    .entry-quote blockquote {
+      font-size: 0.98rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      line-height: 1.75;
+      font-style: italic;
+      margin-bottom: 0.6rem;
+    }
+
+    .entry-quote blockquote::before {
+      content: '\201C';
+      font-family: Georgia, serif;
+      font-size: 1.4rem;
+      color: var(--steel);
+      line-height: 0;
+      vertical-align: -0.3em;
+      margin-right: 0.2rem;
+    }
+
+    .entry-quote cite {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--steel-light);
+      font-style: normal;
+    }
+
+    /* Placeholder quote */
+    .quote-placeholder {
+      font-size: 0.85rem;
+      color: rgba(74,126,181,0.4);
+      font-style: italic;
+      padding: 0.75rem 1rem;
+      border: 1px dashed rgba(74,126,181,0.2);
+      border-radius: 2px;
+    }
+
+    /* ── MEDIA ENTRY ── */
+    .entry-media-strip {
+      margin-bottom: 1.75rem;
+    }
+
+    .media-names {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .media-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      color: var(--steel-pale);
+      white-space: nowrap;
+    }
+
+    .media-divider {
+      color: var(--steel);
+      opacity: 0.4;
+      margin: 0 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .award-block {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      border: 1px solid var(--accent-line);
+      background: rgba(74,126,181,0.06);
+      border-radius: 2px;
+    }
+
+    .award-icon {
+      color: var(--steel-light);
+      flex-shrink: 0;
+    }
+
+    .award-icon svg { width: 1.25rem; height: 1.25rem; }
+
+    .award-text {
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      line-height: 1.4;
+    }
+
+    .award-text strong {
+      display: block;
+      font-weight: 600;
+      color: var(--white);
+      font-size: 0.95rem;
+    }
+
+    /* ── PULL QUOTE INTERSTITIAL ── */
+    .pull-quote-interstitial {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--accent-line);
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+    }
+
+    .pqi-mark {
+      font-family: Georgia, serif;
+      font-size: 8rem;
+      line-height: 0.7;
+      color: var(--steel);
+      opacity: 0.25;
+      padding-right: 3rem;
+      padding-top: 0.5rem;
+      user-select: none;
+    }
+
+    .pqi-quote {
+      font-size: 1.25rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .pqi-cite {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--steel-light);
+      font-style: normal;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      position: relative;
+      z-index: 1;
+      background: var(--navy-mid);
+      border-top: 1px solid var(--accent-line);
+    }
+
+    .cta-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .cta-text {}
+
+    .cta-text h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: 0;
+    }
+
+    .cta-text h2 em {
+      font-style: normal;
+      color: var(--steel-light);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: var(--steel-light);
+      padding: 0.9rem 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-primary:hover {
+      background: var(--steel-pale);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary svg { width: 1rem; height: 1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: var(--navy-mid);
+      border-top: 1px solid var(--accent-line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 2rem 3rem;
+    }
+
+    .footer-logo { display: flex; align-items: center; text-decoration: none; }
+    .footer-logo img { height: 36px; width: auto; opacity: 0.6; transition: opacity 0.2s; }
+    .footer-logo:hover img { opacity: 1; }
+
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--steel-light); }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: rgba(240,244,248,0.3);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+
+      .hero { padding: 8rem 1.5rem 4rem; }
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+
+      .intro-inner { padding: 4rem 1.5rem; }
+
+      .entries-inner { padding: 0 1.5rem; }
+
+      .entry {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 3.5rem 0;
+      }
+
+      .entry-meta { padding-right: 0; display: flex; align-items: center; gap: 1.25rem; }
+      .entry-number { font-size: 3rem; margin-bottom: 0; }
+
+      .pull-quote-interstitial { grid-template-columns: 1fr; gap: 0.5rem; padding: 3rem 0; }
+      .pqi-mark { font-size: 4rem; padding-right: 0; padding-bottom: 0.5rem; }
+
+      
+      .stat { border-right: none; border-bottom: 1px solid var(--accent-line); }
+      .stat:last-child { border-bottom: none; }
+
+      .cta-inner { padding: 4rem 1.5rem; flex-direction: column; align-items: flex-start; }
+
+      footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; gap: 1.25rem; }
+      .footer-links { flex-wrap: wrap; gap: 1.25rem; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner   { animation: fadeUp 0.6s ease both; }
+    .intro-inner  { animation: fadeUp 0.6s 0.1s ease both; }
+
+    .entry {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .entry.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="logo-icon.png" alt="ThndrStrm Strategies">
+    </a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="lightning-strikes.html" class="active">Lightning Strikes</a></li>
+      <li><a href="apply.html" class="nav-cta">Apply</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="section-label">Track Record</div>
+        <h1>Lightning<br><em>Strikes</em></h1>
+      </div>
+      <div class="hero-right">
+        <p>Strategy is easy to talk about. Here's what it looks like when it actually works.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <section class="intro-section">
+    <div class="intro-inner">
+      <h2>A decade of being in the room<br>where it <em>happened.</em></h2>
+      <p>Every engagement below represents work Kaliko led directly — not as a bystander, not as a vendor executing someone else's plan, but as the strategic mind driving the decisions that produced these outcomes.</p>
+      <p>These aren't case studies designed to impress. They're proof of what happens when the right strategy meets the right moment.</p>
+    </div>
+  </section>
+
+  <!-- ENTRIES -->
+  <section class="entries-section">
+    <div class="entries-inner">
+
+      <!-- ENTRY 1: NCIA -->
+      <article class="entry">
+        <div class="entry-meta">
+          <span class="entry-number">01</span>
+          <div class="entry-tag">Federal Policy</div>
+        </div>
+        <div class="entry-content">
+          <img src="ncia_logo.png" alt="National Cannabis Industry Association" class="entry-logo logo-badge">
+          <div class="entry-org">National Cannabis Industry Association</div>
+          <div class="entry-headline">Building the infrastructure for an industry's voice in Washington.</div>
+          <div class="entry-body">
+            <p>When Kaliko joined NCIA as Director of Marketing and Head of Growth, it was already the leading federal trade association for the cannabis industry — but its marketing and business development infrastructure hadn't kept pace with the industry's explosive growth.</p>
+            <p>Kaliko led the overhaul of both — building the systems, messaging frameworks, and business development processes that helped NCIA grow its membership, expand its reach, and show up more powerfully in the national policy conversation at a critical moment for federal cannabis reform.</p>
+          </div>
+          <div class="entry-stats">
+            <div class="stat">
+              <span class="stat-num">250%+</span>
+              <span class="stat-label">Social audience growth in 18 months</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">60%+</span>
+              <span class="stat-label">Growth in website page views</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">~1,000</span>
+              <span class="stat-label">New members in 2019 — most ever in a single year</span>
+            </div>
+          </div>
+          <div class="entry-demonstrated">
+            <div class="demo-label">What this demonstrated</div>
+            <p>Even the most established organizations have untapped strategic leverage — and the right systems can unlock it fast.</p>
+          </div>
+          <div class="entry-quote">
+            <blockquote>Kaliko is simply one of the best marketers in the cannabis industry. His ability to think strategically and come up with creative ideas for any situation helped NCIA tremendously.</blockquote>
+            <cite>Aaron Smith — Former CEO, National Cannabis Industry Association</cite>
+          </div>
+        </div>
+      </article>
+
+      <!-- PULL QUOTE: TAHIR JOHNSON -->
+      <div class="pull-quote-interstitial">
+        <div class="pqi-mark">&ldquo;</div>
+        <blockquote class="pqi-quote">Kaliko is highly skilled in marketing strategy and leading an organization towards its growth goals. He was instrumental in almost every aspect of NCIA and MCBA's success during his tenure there.</blockquote>
+        <cite class="pqi-cite">Tahir Johnson — CEO, Simply Pure Trenton</cite>
+      </div>
+
+      <!-- ENTRY 2: EMERGE -->
+      <article class="entry">
+        <div class="entry-meta">
+          <span class="entry-number">02</span>
+          <div class="entry-tag">Event Launch</div>
+        </div>
+        <div class="entry-content">
+          <img src="Emerge.png" alt="Emerge Virtual Cannabis Conference" class="entry-logo">
+          <div class="entry-org">Emerge Virtual Cannabis Conference</div>
+          <div class="entry-headline">Putting a brand-new event on the map in four weeks.</div>
+          <div class="entry-body">
+            <p>ThndrStrm was brought in just over a month before the launch of the very first Emerge Virtual Cannabis Conference — a brand with zero existing audience and a hard deadline. In four weeks, the team built and executed a launch campaign that drove results well beyond what any new event brand should expect this early.</p>
+          </div>
+          <div class="entry-stats">
+            <div class="stat">
+              <span class="stat-num">120K+</span>
+              <span class="stat-label">Impressions</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">8,964</span>
+              <span class="stat-label">Engagements</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">470</span>
+              <span class="stat-label">Post link clicks</span>
+            </div>
+          </div>
+          <div class="entry-demonstrated">
+            <div class="demo-label">What this demonstrated</div>
+            <p>You don't need an existing audience to make a first impression that counts. The right launch strategy can build credibility and momentum from a standing start.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- ENTRY 3: TOBIAS READ -->
+      <article class="entry">
+        <div class="entry-meta">
+          <span class="entry-number">03</span>
+          <div class="entry-tag">Political Campaign</div>
+        </div>
+        <div class="entry-content">
+          <img src="tobias_logo.png" alt="Tobias Read for Governor" class="entry-logo">
+          <div class="entry-org">Tobias Read for Governor</div>
+          <div class="entry-headline">Launching a statewide campaign with momentum from day one.</div>
+          <div class="entry-body">
+            <p>When Oregon State Treasurer Tobias Read launched his 2022 gubernatorial campaign, ThndrStrm was brought in to build and execute the digital strategy from the ground up. The challenge wasn't just launching a campaign — it was breaking through in a crowded field and establishing Tobias as a serious contender immediately.</p>
+          </div>
+          <div class="entry-stats">
+            <div class="stat">
+              <span class="stat-num">300K+</span>
+              <span class="stat-label">Impressions in 30 days</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">34K+</span>
+              <span class="stat-label">Engagements in 30 days</span>
+            </div>
+          </div>
+          <div class="entry-demonstrated">
+            <div class="demo-label">What this demonstrated</div>
+            <p>A disciplined launch strategy, executed with precision, can establish credibility and momentum before a campaign ever knocks on its first door.</p>
+          </div>
+          <div class="entry-quote">
+            <div class="quote-placeholder">Testimonial pending — Tobias Read campaign</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ENTRY 3: NORML -->
+      <article class="entry">
+        <div class="entry-meta">
+          <span class="entry-number">04</span>
+          <div class="entry-tag">Rapid Response</div>
+        </div>
+        <div class="entry-content">
+          <img src="norml_logo_white.png" alt="NORML" class="entry-logo">
+          <div class="entry-org">NORML</div>
+          <div class="entry-headline">Rapid response strategy that doubled an organization's reach overnight.</div>
+          <div class="entry-body">
+            <p>Four days. That's how much runway ThndrStrm had when the National Organization for the Reform of Marijuana Laws brought Kaliko in ahead of the MORE Act vote in Congress — one of the most significant pieces of federal cannabis legislation in history.</p>
+            <p>Working against the clock, ThndrStrm built and executed a rapid response digital strategy that turned a critical policy moment into a massive audience engagement opportunity.</p>
+          </div>
+          <div class="entry-stats">
+            <div class="stat">
+              <span class="stat-num">+139%</span>
+              <span class="stat-label">Impressions vs. prior period</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">+100%</span>
+              <span class="stat-label">Engagements</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">+130%</span>
+              <span class="stat-label">Messages sent</span>
+            </div>
+          </div>
+          <div class="entry-demonstrated">
+            <div class="demo-label">What this demonstrated</div>
+            <p>The right strategy, deployed at the right moment, can produce extraordinary results even with almost no runway. Timing and precision matter more than budget.</p>
+          </div>
+          <div class="entry-quote">
+            <div class="quote-placeholder">Testimonial pending — NORML</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ENTRY 5: 2022 CAMPAIGN -->
+      <article class="entry">
+        <div class="entry-meta">
+          <span class="entry-number">05</span>
+          <div class="entry-tag">Personal</div>
+        </div>
+        <div class="entry-content">
+          <img src="kaliko_logo_transparent.png" alt="Kaliko for Oregon" class="entry-logo">
+          <div class="entry-org">Kaliko Castille for State Representative</div>
+          <div class="entry-headline">Running the playbook on yourself.</div>
+          <div class="entry-body">
+            <p>In 2022, Kaliko ran for State Representative in Oregon's House District 41 — applying everything ThndrStrm had built for clients to his own campaign. The race produced endorsements from major labor unions and community organizations, built through an organic digital content strategy that punched well above its weight class financially.</p>
+            <p>Running for office is the ultimate stress test for a political strategist. You're making decisions under pressure, with imperfect information, on a public stage, with no margin for error. It's one thing to advise a candidate. It's another to be one.</p>
+          </div>
+          <div class="entry-stats">
+            <div class="stat">
+              <span class="stat-num">4,233</span>
+              <span class="stat-label">Votes — 29% in a 3-way primary</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">$40K+</span>
+              <span class="stat-label">Raised</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">50K+</span>
+              <span class="stat-label">Views on launch video</span>
+            </div>
+          </div>
+          <div class="entry-demonstrated">
+            <div class="demo-label">What this demonstrated</div>
+            <p>ThndrStrm's approach to digital organizing and community building works — even when the stakes are personal.</p>
+          </div>
+          <div class="entry-quote">
+            <div class="quote-placeholder">Testimonial pending — campaign supporter or endorsing organization</div>
+          </div>
+        </div>
+      </article>
+
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-text">
+        <h2>Ready to write your own<br><em>Lightning Strike</em> moment?</h2>
+      </div>
+      <a href="apply.html" class="btn-primary">
+        Apply to Work With ThndrStrm
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="index.html" class="footer-logo">
+      <img src="logo-icon.png" alt="ThndrStrm Strategies">
+    </a>
+    <ul class="footer-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="lightning-strikes.html">Lightning Strikes</a></li>
+      <li><a href="apply.html">Apply</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 ThndrStrm Strategies. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Scroll-triggered fade for entries
+    const entries = document.querySelectorAll('.entry');
+    const observer = new IntersectionObserver((items) => {
+      items.forEach(item => {
+        if (item.isIntersecting) {
+          item.target.classList.add('in-view');
+          observer.unobserve(item.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    entries.forEach(e => observer.observe(e));
+  </script>
+
+</body>
+</html>
