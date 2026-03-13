@@ -1,0 +1,7 @@
+# ThndrStrm Strategies - robots.txt
+# https://thndrstrmstrategies.com
+
+User-agent: *
+Allow: /
+
+Sitemap: https://thndrstrmstrategies.com/sitemap.xml
