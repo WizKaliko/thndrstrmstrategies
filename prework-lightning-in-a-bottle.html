@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThndrStrm — Pre-Work: Lightning In a Bottle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #080f1d;
+      --navy-mid: #0d1f38;
+      --navy-light: #142844;
+      --steel: #4a7eb5;
+      --steel-light: #6fa3d4;
+      --white: #f0f4f8;
+      --white-dim: rgba(240,244,248,0.7);
+      --white-faint: rgba(240,244,248,0.12);
+      --accent-line: rgba(74,126,181,0.3);
+      --green: #2d9e6b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 6rem;
+    }
+
+    /* HEADER */
+    .form-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    .wordmark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    .wordmark em { color: var(--steel-light); font-style: normal; }
+
+    .engagement-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--white-faint);
+      border: 1px solid var(--accent-line);
+      padding: 0.4rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--steel-light);
+    }
+
+    .badge-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: var(--steel-light);
+    }
+
+    .form-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-title em { font-style: normal; color: var(--steel-light); }
+
+    .framing-note {
+      background: var(--navy-mid);
+      border-left: 3px solid var(--steel-light);
+      padding: 1.1rem 1.4rem;
+      font-size: 0.92rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      line-height: 1.7;
+    }
+
+    .framing-note strong { color: var(--white); font-weight: 600; }
+
+    /* PROGRESS */
+    .progress-bar {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 2.5rem;
+    }
+
+    .progress-step {
+      height: 3px;
+      flex: 1;
+      background: var(--white-faint);
+      border-radius: 2px;
+      transition: background 0.3s ease;
+    }
+
+    .progress-step.active { background: var(--steel-light); }
+    .progress-step.complete { background: var(--green); }
+
+    /* CLIENT INFO */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .field-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--steel-light);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      background: var(--navy-mid);
+      border: 1px solid var(--accent-line);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      border-color: var(--steel-light);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(240,244,248,0.3);
+      font-weight: 300;
+    }
+
+    /* QUESTION BLOCKS */
+    .question-block {
+      margin-bottom: 2.5rem;
+    }
+
+    .question-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      color: var(--steel-light);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .question-number::after {
+      content: '';
+      display: block;
+      flex: 1;
+      height: 1px;
+      background: var(--accent-line);
+    }
+
+    .question-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+
+    .question-sub {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      margin-bottom: 0.85rem;
+      line-height: 1.6;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .char-count {
+      font-size: 0.75rem;
+      color: var(--white-dim);
+      text-align: right;
+      margin-top: 4px;
+      opacity: 0.6;
+    }
+
+    /* SUBMIT */
+    .submit-section {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--accent-line);
+    }
+
+    .submit-note {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      margin-bottom: 1.5rem;
+      line-height: 1.65;
+    }
+
+    .btn-submit {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--navy);
+      background: var(--steel-light);
+      border: none;
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-submit:hover { background: #a8c8e8; }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-submit svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* SUCCESS STATE */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(45,158,107,0.15);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .success-icon svg { width: 28px; height: 28px; color: var(--green); }
+
+    .success-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .success-message {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--white-dim);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* STATUS MESSAGE */
+    .status-msg {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .status-msg.error {
+      background: rgba(201,64,64,0.15);
+      border-left: 3px solid #c94040;
+      color: #f09595;
+    }
+
+    .status-msg.sending {
+      background: var(--white-faint);
+      border-left: 3px solid var(--steel-light);
+      color: var(--white-dim);
+    }
+
+    @media (max-width: 600px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .page { padding: 2.5rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="form-header">
+    <div class="wordmark">THNDR<em>STRM</em></div>
+    <div class="engagement-badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">Lightning In a Bottle — Pre-Work</span>
+    </div>
+    <h1 class="form-title">Before we<br><em>get to work.</em></h1>
+    <div class="framing-note">
+      <strong>These aren't screening questions — you're already in.</strong> Your answers shape Session 1 so we start with insight rather than context-gathering. Be as honest and specific as you can. There are no wrong answers, and nothing here gets shared beyond ThndrStrm.
+    </div>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progress">
+    <div class="progress-step" id="step-0"></div>
+    <div class="progress-step" id="step-1"></div>
+    <div class="progress-step" id="step-2"></div>
+    <div class="progress-step" id="step-3"></div>
+    <div class="progress-step" id="step-4"></div>
+    <div class="progress-step" id="step-5"></div>
+    <div class="progress-step" id="step-6"></div>
+  </div>
+
+  <!-- FORM -->
+  <div id="form-content">
+
+    <!-- CLIENT INFO -->
+    <div class="question-block">
+      <div class="question-number">Your information</div>
+      <div class="info-grid">
+        <div class="field-group">
+          <label for="name">Your name</label>
+          <input type="text" id="name" placeholder="Full name" autocomplete="name">
+        </div>
+        <div class="field-group">
+          <label for="org">Organization</label>
+          <input type="text" id="org" placeholder="Organization name">
+        </div>
+        <div class="field-group">
+          <label for="role">Your role</label>
+          <input type="text" id="role" placeholder="Title or role">
+        </div>
+        <div class="field-group">
+          <label for="email">Your email</label>
+          <input type="email" id="email" placeholder="email@organization.com" autocomplete="email">
+        </div>
+      </div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-block" id="q1">
+      <div class="question-number">Question 01 of 05</div>
+      <div class="question-text">What's going on right now?</div>
+      <div class="question-sub">In plain terms, describe where your organization is at this moment. Not the polished version — the real one. What's working, what isn't, and what feels stuck.</div>
+      <textarea id="a1" placeholder="Be specific. The more honest you are here, the more useful Session 1 will be." oninput="updateProgress(); updateCharCount(this, 'cc1')"></textarea>
+      <div class="char-count" id="cc1">0 words</div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-block" id="q2">
+      <div class="question-number">Question 02 of 05</div>
+      <div class="question-text">What made this the moment?</div>
+      <div class="question-sub">Something prompted you to seek outside strategic support right now. What was it? A specific conversation, a loss, a missed opportunity, a board meeting — whatever it was, name it.</div>
+      <textarea id="a2" placeholder="There's usually a specific thing. Name it if you can." oninput="updateProgress(); updateCharCount(this, 'cc2')"></textarea>
+      <div class="char-count" id="cc2">0 words</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-block" id="q3">
+      <div class="question-number">Question 03 of 05</div>
+      <div class="question-text">What's the conversation you keep having that never gets resolved?</div>
+      <div class="question-sub">Every organization has one. The thing that comes up in every leadership meeting but never quite gets decided. What's yours?</div>
+      <textarea id="a3" placeholder="This one is often the most important answer on this form." oninput="updateProgress(); updateCharCount(this, 'cc3')"></textarea>
+      <div class="char-count" id="cc3">0 words</div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-block" id="q4">
+      <div class="question-number">Question 04 of 05</div>
+      <div class="question-text">What are the real constraints?</div>
+      <div class="question-sub">Budget, staff capacity, timeline, political considerations — what are the fixed walls of the room we're building in? What can't change in the next 90 days?</div>
+      <textarea id="a4" placeholder="Be honest about what's not movable. That's where good strategy starts." oninput="updateProgress(); updateCharCount(this, 'cc4')"></textarea>
+      <div class="char-count" id="cc4">0 words</div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-block" id="q5">
+      <div class="question-number">Question 05 of 05</div>
+      <div class="question-text">What does success look like at 90 days?</div>
+      <div class="question-sub">Not the aspirational version. Given your actual constraints, what would need to be true 90 days from now for this engagement to feel worth it?</div>
+      <textarea id="a5" placeholder="Specific is better than inspiring here." oninput="updateProgress(); updateCharCount(this, 'cc5')"></textarea>
+      <div class="char-count" id="cc5">0 words</div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <p class="submit-note">Your responses will be sent directly to Kaliko before your first session. You'll also receive a copy by email for your own reference.</p>
+      <button class="btn-submit" onclick="submitForm()" id="submit-btn">
+        Submit Pre-Work
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="status-msg" id="status-msg"></div>
+    </div>
+
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="success-state" id="success-state">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="success-title">You're all set.</div>
+    <p class="success-message">Your pre-work has been sent to Kaliko. He'll review your answers before Session 1 so you can skip the context-gathering and get straight to work. See you soon.</p>
+  </div>
+
+</div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywZdpRK0KS5VyHDw00vIuQ0zNnWrU-kS3JeU6JIQhZUk-eZZROB7XSDUKGdjV24LRPsw/exec';
+
+  // Progress tracking
+  function updateProgress() {
+    const fields = ['a1','a2','a3','a4','a5'];
+    const filled = fields.filter(id => {
+      const el = document.getElementById(id);
+      return el && el.value.trim().split(/\s+/).filter(Boolean).length >= 5;
+    }).length;
+
+    for (let i = 0; i < 5; i++) {
+      const step = document.getElementById('step-' + (i + 1));
+      if (!step) continue;
+      if (i < filled) {
+        step.className = 'progress-step complete';
+      } else if (i === filled) {
+        step.className = 'progress-step active';
+      } else {
+        step.className = 'progress-step';
+      }
+    }
+  }
+
+  function updateCharCount(textarea, countId) {
+    const words = textarea.value.trim().split(/\s+/).filter(Boolean).length;
+    const el = document.getElementById(countId);
+    if (el) el.textContent = words + (words === 1 ? ' word' : ' words');
+  }
+
+  function validate() {
+    const name  = document.getElementById('name').value.trim();
+    const org   = document.getElementById('org').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const answers = ['a1','a2','a3','a4','a5'].map(id =>
+      document.getElementById(id).value.trim()
+    );
+
+    if (!name || !org || !email) return 'Please fill in your name, organization, and email.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
+    const empty = answers.findIndex(a => a.length < 1);
+    if (empty !== -1) return `Please answer Question ${empty + 1} before submitting.`;
+    return null;
+  }
+
+  function showStatus(msg, type) {
+    const el = document.getElementById('status-msg');
+    el.textContent = msg;
+    el.className = 'status-msg ' + type;
+    el.style.display = 'block';
+  }
+
+  function submitForm() {
+    const error = validate();
+    if (error) { showStatus(error, 'error'); return; }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    showStatus('Sending your responses…', 'sending');
+
+    const data = {
+      form_type:       'pre-work',
+      name:            document.getElementById('name').value.trim(),
+      org:             document.getElementById('org').value.trim(),
+      role:            document.getElementById('role').value.trim(),
+      email:           document.getElementById('email').value.trim(),
+      engagement_type: 'Lightning In a Bottle',
+      answer_1:        document.getElementById('a1').value.trim(),
+      answer_2:        document.getElementById('a2').value.trim(),
+      answer_3:        document.getElementById('a3').value.trim(),
+      answer_4:        document.getElementById('a4').value.trim(),
+      answer_5:        document.getElementById('a5').value.trim(),
+      submitted:       new Date().toISOString()
+    };
+
+    // Build URL-encoded form data — most reliable for e.parameter in Apps Script
+    var formData = new URLSearchParams();
+    Object.keys(data).forEach(function(key) {
+      formData.append(key, data[key]);
+    });
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    })
+    .then(function() {
+      document.getElementById('form-content').style.display = 'none';
+      document.getElementById('success-state').style.display = 'block';
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      showStatus('Error: ' + err.message, 'error');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('step-0').className = 'progress-step active';
+  });
+</script>
+<iframe name="hidden-iframe" style="display:none;"></iframe>
+
+</body>
+</html>
