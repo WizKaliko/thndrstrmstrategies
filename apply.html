@@ -628,6 +628,16 @@
           </div>
 
           <div class="field-group">
+            <label for="email">Email <span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="you@yourorg.com" autocomplete="email" required>
+          </div>
+
+          <div class="field-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="Optional" autocomplete="tel">
+          </div>
+
+          <div class="field-group">
             <label for="org">Organization Name <span class="req">*</span></label>
             <input type="text" id="org" name="org" placeholder="Your organization" required>
           </div>
@@ -757,6 +767,13 @@
         });
       }
 
+      // Email format check
+      const emailField = form.email;
+      if (emailField.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value.trim())) {
+        valid = false;
+        emailField.style.borderColor = 'rgba(181,74,74,0.6)';
+      }
+
       if (!valid) return;
 
       // Disable button during submission
@@ -770,6 +787,8 @@
       // Gather form data
       const data = {
         name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
         org: form.org.value.trim(),
         role: form.role.value.trim(),
         orgType: form.orgType.value,
